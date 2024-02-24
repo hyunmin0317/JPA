@@ -32,4 +32,7 @@ public class User {
 
     @Lob
     private String description;
+
+    @Transient
+    private int temp;
 }

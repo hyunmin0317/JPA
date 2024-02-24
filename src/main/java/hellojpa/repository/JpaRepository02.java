@@ -39,8 +39,6 @@ public class JpaRepository02 {
         EntityManagerFactory emf = Persistence.createEntityManagerFactory("hello");
         EntityManager em = emf.createEntityManager();
         List<Member> result = em.createQuery("select m from Member as m", Member.class)
-//                .setFirstResult(5) 5 ~
-//                .setMaxResults(8)    ~ 8
                 .getResultList();
         em.close();
         emf.close();

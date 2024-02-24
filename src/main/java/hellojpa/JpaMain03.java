@@ -10,6 +10,7 @@ public class JpaMain03 {
 
     public static void main(String[] args) {
         test1();
+        test2();
     }
 
     // 영속성 컨텍스트 개념
@@ -41,6 +42,19 @@ public class JpaMain03 {
         } finally {
             em.close();
         }
+        emf.close();
+    }
+
+    // 영속성 엔티티의 동일성 보장
+    public static void test2() {
+        EntityManagerFactory emf = Persistence.createEntityManagerFactory("hello");
+        EntityManager em = emf.createEntityManager();
+
+        Member findMember1 = em.find(Member.class, 101L);
+        Member findMember2 = em.find(Member.class, 101L);
+        System.out.println("result = " + (findMember1 == findMember2));
+
+        em.close();
         emf.close();
     }
 }

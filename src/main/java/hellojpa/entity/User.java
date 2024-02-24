@@ -18,6 +18,7 @@ import java.util.Date;
 public class User {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     // unique 보다 uniqueConstraints 사용 (제약조건명 지정 가능)

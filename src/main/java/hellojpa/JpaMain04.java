@@ -21,11 +21,14 @@ public class JpaMain04 {
         tx.begin();
         try {
             User user = User.builder()
-                    .id(1L)
                     .username("A")
-                    .roleType(RoleType.ADMIN)
+                    .roleType(RoleType.USER)
                     .build();
+            // IDENTITY 전략 -> persist 시점에 즉시 INSERT 시행
+            System.out.println("===============");
             em.persist(user);
+            System.out.println("user.id = " + user.getId());
+            System.out.println("===============");
             tx.commit();
         } catch (Exception e) {
             tx.rollback();

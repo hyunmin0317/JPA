@@ -20,6 +20,7 @@ public class User {
     @Id
     private Long id;
 
+    // unique 보다 uniqueConstraints 사용 (제약조건명 지정 가능)
     @Column(name = "name", nullable = false, unique = true, length = 10)
     private String username;
 
@@ -43,6 +44,7 @@ public class User {
     @Lob
     private String description;
 
+    // 필드 매핑 X -> 주로 메모리상에서만 임시로 보관 (데이터베이스에 저장 X, 조회 X)
     @Transient
     private int temp;
 }

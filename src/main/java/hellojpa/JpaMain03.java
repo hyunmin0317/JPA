@@ -13,6 +13,7 @@ public class JpaMain03 {
         test2();
         test3();
         test4();
+        test5();
     }
 
     // 영속성 컨텍스트 개념
@@ -97,6 +98,29 @@ public class JpaMain03 {
             member.setName("ZZZZZ");
 //            em.update(member);    이런 코드가 있어야 하지 않을까? -> X
             tx.commit();    // [트랜잭션] 커밋
+        } catch (Exception e) {
+            tx.rollback();
+        } finally {
+            em.close();
+        }
+        emf.close();
+    }
+
+    // 플러시 발생
+    public static void test5() {
+        EntityManagerFactory emf = Persistence.createEntityManagerFactory("hello");
+        EntityManager em = emf.createEntityManager();
+        EntityTransaction tx = em.getTransaction();
+        tx.begin();
+        try {
+            Member member = new Member(200L, "member200");
+            em.persist(member);
+
+            // 플러시 직접 호출
+            em.flush();
+
+            System.out.println("===============");
+            tx.commit();
         } catch (Exception e) {
             tx.rollback();
         } finally {

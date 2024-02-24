@@ -8,6 +8,7 @@ public class JpaMain02 {
     public static void main(String[] args) {
         saveTest();
         findOneTest();
+        updateTest();
     }
 
     public static void saveTest() {
@@ -19,8 +20,15 @@ public class JpaMain02 {
     }
 
     public static void findOneTest() {
-        Member findMember = JpaRepository02.findOne(1L);
-        System.out.println("findMember.id = " + findMember.getId());
-        System.out.println("findMember.name = " + findMember.getName());
+        Member member = JpaRepository02.findOne(1L);
+        System.out.println("findMember.id = " + member.getId());
+        System.out.println("findMember.name = " + member.getName());
+    }
+
+    public static void updateTest() {
+        JpaRepository02.update(1L, "HelloJPA");
+        Member member = JpaRepository02.findOne(1L);
+        System.out.println("updatedMember.id = " + member.getId());
+        System.out.println("updatedMember.name = " + member.getName());
     }
 }

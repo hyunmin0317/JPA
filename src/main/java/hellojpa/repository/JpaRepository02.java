@@ -5,11 +5,9 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.EntityTransaction;
 import jakarta.persistence.Persistence;
-import lombok.NoArgsConstructor;
 
 import java.util.List;
 
-@NoArgsConstructor
 public class JpaRepository02 {
 
     public static void save(Member member) {
@@ -35,6 +33,18 @@ public class JpaRepository02 {
         em.close();
         emf.close();
         return member;
+    }
+
+    public static List<Member> findAll() {
+        EntityManagerFactory emf = Persistence.createEntityManagerFactory("hello");
+        EntityManager em = emf.createEntityManager();
+        List<Member> result = em.createQuery("select m from Member as m", Member.class)
+//                .setFirstResult(5) 5 ~
+//                .setMaxResults(8)    ~ 8
+                .getResultList();
+        em.close();
+        emf.close();
+        return result;
     }
 
     public static void update(Long id, String name) {

@@ -61,4 +61,21 @@ public class JpaRepository02 {
         }
         emf.close();
     }
+
+    public static void delete(Long id) {
+        EntityManagerFactory emf = Persistence.createEntityManagerFactory("hello");
+        EntityManager em = emf.createEntityManager();
+        EntityTransaction tx = em.getTransaction();
+        tx.begin();
+        try {
+            Member member = em.find(Member.class, id);
+            em.remove(member);
+            tx.commit();
+        } catch (Exception e) {
+            tx.rollback();
+        } finally {
+            em.close();
+        }
+        emf.close();
+    }
 }

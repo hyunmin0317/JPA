@@ -7,6 +7,7 @@ public class JpaMain02 {
 
     public static void main(String[] args) {
         saveTest();
+        findOneTest();
     }
 
     public static void saveTest() {
@@ -15,5 +16,11 @@ public class JpaMain02 {
                 .name("HelloA")
                 .build();
         JpaRepository02.save(member);
+    }
+
+    public static void findOneTest() {
+        Member findMember = JpaRepository02.findOne(1L);
+        System.out.println("findMember.id = " + findMember.getId());
+        System.out.println("findMember.name = " + findMember.getName());
     }
 }

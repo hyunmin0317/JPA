@@ -6,6 +6,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Date;
 
 @Entity
@@ -32,6 +34,12 @@ public class User {
     @Temporal(TemporalType.TIMESTAMP)
     private Date lastModifiedDate;
 
+    // 최신 하이버네이트 지원
+    private LocalDate testLocalDate;            // @Temporal(TemporalType.DATE)
+    private LocalDateTime testLocalDateTime;    // @Temporal(TemporalType.TIME)
+
+    // CLOB: String, char[], java.sql.CLOB - 필드 타입이 문자
+    // BLOB: byte[], java.sql.BLOB - 나머지
     @Lob
     private String description;
 

@@ -9,6 +9,11 @@ import jakarta.persistence.Persistence;
 public class JpaMain03 {
 
     public static void main(String[] args) {
+        test1();
+    }
+
+    // 영속성 컨텍스트 개념
+    public static void test1() {
         EntityManagerFactory emf = Persistence.createEntityManagerFactory("hello");
         EntityManager em = emf.createEntityManager();
         EntityTransaction tx = em.getTransaction();

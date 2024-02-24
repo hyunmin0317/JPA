@@ -39,8 +39,6 @@ public class JpaRepository02 {
         EntityManagerFactory emf = Persistence.createEntityManagerFactory("hello");
         EntityManager em = emf.createEntityManager();
         List<Member> result = em.createQuery("select m from Member as m", Member.class)
-//                .setFirstResult(5) 5 ~
-//                .setMaxResults(8)    ~ 8
                 .getResultList();
         em.close();
         emf.close();
@@ -55,6 +53,23 @@ public class JpaRepository02 {
         try {
             Member member = em.find(Member.class, id);
             member.setName(name);
+            tx.commit();
+        } catch (Exception e) {
+            tx.rollback();
+        } finally {
+            em.close();
+        }
+        emf.close();
+    }
+
+    public static void delete(Long id) {
+        EntityManagerFactory emf = Persistence.createEntityManagerFactory("hello");
+        EntityManager em = emf.createEntityManager();
+        EntityTransaction tx = em.getTransaction();
+        tx.begin();
+        try {
+            Member member = em.find(Member.class, id);
+            em.remove(member);
             tx.commit();
         } catch (Exception e) {
             tx.rollback();

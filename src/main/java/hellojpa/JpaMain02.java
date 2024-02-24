@@ -12,13 +12,11 @@ public class JpaMain02 {
         findOneTest();
         updateTest();
         findAllTest();
+        deleteTest();
     }
 
     public static void saveTest() {
-        Member member = Member.builder()
-                .id(1L)
-                .name("HelloA")
-                .build();
+        Member member = new Member(1L, "HelloA");
         JpaRepository02.save(member);
     }
 
@@ -38,5 +36,9 @@ public class JpaMain02 {
         Member member = JpaRepository02.findOne(1L);
         System.out.println("updatedMember.id = " + member.getId());
         System.out.println("updatedMember.name = " + member.getName());
+    }
+
+    public static void deleteTest() {
+        JpaRepository02.delete(101L);
     }
 }

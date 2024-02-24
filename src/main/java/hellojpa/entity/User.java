@@ -2,6 +2,7 @@ package hellojpa.entity;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -9,6 +10,7 @@ import java.util.Date;
 
 @Entity
 @Getter
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 public class User {
@@ -16,13 +18,12 @@ public class User {
     @Id
     private Long id;
 
-    @Column(name = "name", unique = true, length = 10)
+    @Column(name = "name", nullable = false, unique = true, length = 10)
     private String username;
 
-    @Column(nullable = false)
     private Integer age;
 
-    @Enumerated(EnumType.STRING)
+    @Enumerated(EnumType.STRING)    // 기본 ORDINAL 사용 X
     private RoleType roleType;
 
     @Temporal(TemporalType.TIMESTAMP)

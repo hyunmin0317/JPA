@@ -19,6 +19,7 @@ public class User {
     @Column(name = "name", unique = true, length = 10)
     private String username;
 
+    @Column(nullable = false)
     private Integer age;
 
     @Enumerated(EnumType.STRING)

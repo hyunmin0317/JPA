@@ -12,6 +12,7 @@ public class JpaMain03 {
         test1();
         test2();
         test3();
+        test4();
     }
 
     // 영속성 컨텍스트 개념
@@ -73,7 +74,29 @@ public class JpaMain03 {
             System.out.println("===============");
 
             // 커밋하는 순간 데이터베이스에 INSERT SQL을 보낸다.
-            tx.commit();    // [트랜잭션] 시작
+            tx.commit();    // [트랜잭션] 커밋
+        } catch (Exception e) {
+            tx.rollback();
+        } finally {
+            em.close();
+        }
+        emf.close();
+    }
+
+    // 엔티티 수정 - 변경 감지
+    public static void test4() {
+        EntityManagerFactory emf = Persistence.createEntityManagerFactory("hello");
+        EntityManager em = emf.createEntityManager();
+        EntityTransaction tx = em.getTransaction();
+        tx.begin();     // [트랜잭션] 시작
+        try {
+            // 영속 엔티티 조회
+            Member member = em.find(Member.class, 150L);
+
+            // 영속 엔티티 데이터 수정
+            member.setName("ZZZZZ");
+//            em.update(member);    이런 코드가 있어야 하지 않을까? -> X
+            tx.commit();    // [트랜잭션] 커밋
         } catch (Exception e) {
             tx.rollback();
         } finally {

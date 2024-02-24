@@ -7,6 +7,8 @@ import jakarta.persistence.EntityTransaction;
 import jakarta.persistence.Persistence;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @NoArgsConstructor
 public class JpaRepository02 {
 
@@ -33,5 +35,22 @@ public class JpaRepository02 {
         em.close();
         emf.close();
         return member;
+    }
+
+    public static void update(Long id, String name) {
+        EntityManagerFactory emf = Persistence.createEntityManagerFactory("hello");
+        EntityManager em = emf.createEntityManager();
+        EntityTransaction tx = em.getTransaction();
+        tx.begin();
+        try {
+            Member member = em.find(Member.class, id);
+            member.setName(name);
+            tx.commit();
+        } catch (Exception e) {
+            tx.rollback();
+        } finally {
+            em.close();
+        }
+        emf.close();
     }
 }

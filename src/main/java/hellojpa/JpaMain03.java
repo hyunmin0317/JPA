@@ -21,10 +21,7 @@ public class JpaMain03 {
         tx.begin();
         try {
             //비영속
-            Member member = Member.builder()
-                    .id(101L)
-                    .name("HelloJPA")
-                    .build();
+            Member member = new Member(101L, "HelloJPA");
 
             //영속
             System.out.println("=== BEFORE ===");

@@ -15,10 +15,7 @@ public class JpaMain02 {
     }
 
     public static void saveTest() {
-        Member member = Member.builder()
-                .id(1L)
-                .name("HelloA")
-                .build();
+        Member member = new Member(1L, "HelloA");
         JpaRepository02.save(member);
     }
 

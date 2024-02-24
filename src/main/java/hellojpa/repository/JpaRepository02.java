@@ -25,4 +25,13 @@ public class JpaRepository02 {
         }
         emf.close();
     }
+
+    public static Member findOne(Long id) {
+        EntityManagerFactory emf = Persistence.createEntityManagerFactory("hello");
+        EntityManager em = emf.createEntityManager();
+        Member member = em.find(Member.class, id);
+        em.close();
+        emf.close();
+        return member;
+    }
 }

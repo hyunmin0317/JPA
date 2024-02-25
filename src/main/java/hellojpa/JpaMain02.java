@@ -1,7 +1,7 @@
 package hellojpa;
 
 import hellojpa.entity.Member;
-import hellojpa.repository.JpaRepository02;
+import hellojpa.repository.MemberRepository;
 
 import java.util.List;
 
@@ -17,28 +17,28 @@ public class JpaMain02 {
 
     public static void saveTest() {
         Member member = new Member(1L, "HelloA");
-        JpaRepository02.save(member);
+        MemberRepository.save(member);
     }
 
     public static void findOneTest() {
-        Member member = JpaRepository02.findOne(1L);
+        Member member = MemberRepository.findOne(1L);
         System.out.println("findMember.id = " + member.getId());
         System.out.println("findMember.name = " + member.getName());
     }
 
     public static void findAllTest() {
-        List<Member> result = JpaRepository02.findAll();
+        List<Member> result = MemberRepository.findAll();
         result.forEach(m -> System.out.println(m.getName()));
     }
 
     public static void updateTest() {
-        JpaRepository02.update(1L, "HelloJPA");
-        Member member = JpaRepository02.findOne(1L);
+        MemberRepository.update(1L, "HelloJPA");
+        Member member = MemberRepository.findOne(1L);
         System.out.println("updatedMember.id = " + member.getId());
         System.out.println("updatedMember.name = " + member.getName());
     }
 
     public static void deleteTest() {
-        JpaRepository02.delete(101L);
+        MemberRepository.delete(101L);
     }
 }

@@ -8,7 +8,7 @@ import jakarta.persistence.Persistence;
 
 import java.util.List;
 
-public class JpaRepository02 {
+public class MemberRepository {
 
     public static void save(Member member) {
         EntityManagerFactory emf = Persistence.createEntityManagerFactory("hello");

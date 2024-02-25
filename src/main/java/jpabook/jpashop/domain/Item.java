@@ -1,9 +1,6 @@
 package jpabook.jpashop.domain;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.Getter;
 
 @Entity
@@ -11,7 +8,7 @@ import lombok.Getter;
 public class Item {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "ITEM_ID")
     private Long id;
 

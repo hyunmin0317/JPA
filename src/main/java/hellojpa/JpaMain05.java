@@ -97,7 +97,7 @@ public class JpaMain05 {
             Member3 member = Member3.builder()
                     .name("member1")
                     .build();
-            member.setTeam(team);
+            member.changeTeam(team);
             em.persist(member);
 
             tx.commit();

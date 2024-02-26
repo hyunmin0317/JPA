@@ -15,6 +15,7 @@ public class JpaMain05 {
     public static void main(String[] args) {
         test1();
         test2();
+        test3();
     }
 
     public static void test1() {
@@ -72,6 +73,33 @@ public class JpaMain05 {
             Member3 findMember = em.find(Member3.class, member.getId());
             List<Member3> members = findMember.getTeam().getMembers();
             members.forEach(m -> System.out.println("m = " + m.getName()));
+
+            tx.commit();
+        } catch (Exception e) {
+            tx.rollback();
+        } finally {
+            em.close();
+        }
+        emf.close();
+    }
+
+    public static void test3() {
+        EntityManagerFactory emf = Persistence.createEntityManagerFactory("hello");
+        EntityManager em = emf.createEntityManager();
+        EntityTransaction tx = em.getTransaction();
+        tx.begin();
+        try {
+            Team team = Team.builder()
+                    .name("TeamA")
+                    .build();
+            em.persist(team);
+
+            Member3 member = Member3.builder()
+                    .name("member1")
+                    .build();
+            team.getMembers().add(member);
+            member.setTeam(team);
+            em.persist(member);
 
             tx.commit();
         } catch (Exception e) {

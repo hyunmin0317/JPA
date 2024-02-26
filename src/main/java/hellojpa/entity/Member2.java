@@ -2,14 +2,16 @@ package hellojpa.entity;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-@Entity(name = "TEAM_MEMBER")
+@Entity(name = "MBR2")
 @Getter
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class TMember {
+public class Member2 {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

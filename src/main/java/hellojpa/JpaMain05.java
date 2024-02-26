@@ -8,6 +8,8 @@ import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.EntityTransaction;
 import jakarta.persistence.Persistence;
 
+import java.util.List;
+
 public class JpaMain05 {
 
     public static void main(String[] args) {
@@ -64,10 +66,12 @@ public class JpaMain05 {
                     .build();
             em.persist(member);
 
+            em.flush();
+            em.clear();
+
             Member3 findMember = em.find(Member3.class, member.getId());
-            Team findTeam = findMember.getTeam();
-            System.out.println("findTeam.id = " + findTeam.getId());
-            System.out.println("findTeam.name = " + findTeam.getName());
+            List<Member3> members = findMember.getTeam().getMembers();
+            members.forEach(m -> System.out.println("m = " + m.getName()));
 
             tx.commit();
         } catch (Exception e) {

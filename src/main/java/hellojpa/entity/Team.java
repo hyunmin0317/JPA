@@ -6,6 +6,9 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Entity
 @Getter
 @Builder
@@ -19,4 +22,7 @@ public class Team {
     private Long id;
 
     private String name;
+
+    @OneToMany(mappedBy = "team")
+    private List<Member3> members = new ArrayList<>();
 }

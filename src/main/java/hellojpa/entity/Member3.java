@@ -25,6 +25,10 @@ public class Member3 {
     @JoinColumn(name = "TEAM_ID")
     private Team team;
 
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "LOCKER_ID")
+    private Locker locker;
+
     public void changeTeam(Team team) {
         this.team = team;
         team.getMembers().add(this);

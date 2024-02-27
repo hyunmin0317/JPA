@@ -159,11 +159,11 @@ public class JpaMain08 {
             Member3 refMember = em.getReference(Member3.class, member1.getId());
             System.out.println("refMember = " + refMember.getClass());      // Proxy
 
-            em.detach(refMember);
-            em.clear();
-            em.close();
-
-            refMember.getName();        // org.hibernate.LazyInitializationException
+// org.hibernate.LazyInitializationException
+//            em.detach(refMember);
+//            em.clear();
+//            em.close();
+//            refMember.getName();
             tx.commit();
         } catch (Exception e) {
             tx.rollback();

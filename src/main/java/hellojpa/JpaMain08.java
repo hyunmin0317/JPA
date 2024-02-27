@@ -1,6 +1,8 @@
 package hellojpa;
 
+import hellojpa.entity.Child;
 import hellojpa.entity.Member3;
+import hellojpa.entity.Parent;
 import hellojpa.entity.Team;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
@@ -19,6 +21,7 @@ public class JpaMain08 {
         test4();
         test5();
         test6();
+        test7();
     }
 
     public static void test1() {
@@ -215,6 +218,36 @@ public class JpaMain08 {
             List<Member3> members = em.createQuery("select m from MBR3 m", Member3.class)
                     .getResultList();
             members.forEach(mem -> System.out.println("mem = " + mem.getName()));
+
+            tx.commit();
+        } catch (Exception e) {
+            tx.rollback();
+        } finally {
+            em.close();
+        }
+        emf.close();
+    }
+
+    public static void test7() {
+        EntityManagerFactory emf = Persistence.createEntityManagerFactory("hello");
+        EntityManager em = emf.createEntityManager();
+        EntityTransaction tx = em.getTransaction();
+        tx.begin();
+        try {
+            Child child1 = new Child();
+            Child child2 = new Child();
+
+            Parent parent = new Parent();
+            parent.addChild(child1);
+            parent.addChild(child2);
+
+            // CASCADE ALL 설정 시
+            em.persist(parent);
+
+            // CASCADE 설정 X
+//            em.persist(parent);
+//            em.persist(child1);
+//            em.persist(child2);
 
             tx.commit();
         } catch (Exception e) {

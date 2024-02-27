@@ -158,12 +158,16 @@ public class JpaMain08 {
 
             Member3 refMember = em.getReference(Member3.class, member1.getId());
             System.out.println("refMember = " + refMember.getClass());      // Proxy
+            System.out.println("isLoaded = " + emf.getPersistenceUnitUtil().isLoaded(refMember));
+            refMember.getName();
+            System.out.println("isLoaded = " + emf.getPersistenceUnitUtil().isLoaded(refMember));
 
 // org.hibernate.LazyInitializationException
 //            em.detach(refMember);
 //            em.clear();
 //            em.close();
 //            refMember.getName();
+
             tx.commit();
         } catch (Exception e) {
             tx.rollback();

@@ -133,6 +133,9 @@ public class JpaMain09 {
             findMember.getFavoriteFoods().remove("치킨");
             findMember.getFavoriteFoods().add("한식");
 
+            findMember.getAddressHistory().remove(new Address("old1", "street", "10000"));
+            findMember.getAddressHistory().add(new Address("newCity1", "street", "10000"));
+
             // 값 타입 컬렉션 -> 지연 로딩 (LAZY)
             List<Address> addressHistory = findMember.getAddressHistory();
             addressHistory.forEach(h -> System.out.println("address = " + h.getCity()));

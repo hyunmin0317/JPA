@@ -12,6 +12,7 @@ public class JpaMain08 {
     public static void main(String[] args) {
         test1();
         test2();
+        test3();
     }
 
     public static void test1() {
@@ -66,6 +67,41 @@ public class JpaMain08 {
             System.out.println("findMember.id = " + findMember2.getId());
             System.out.println("findMember.name = " + findMember2.getName());
             System.out.println("after findMember = " + findMember2.getClass());     // class hellojpa.entity.Member3$HibernateProxy
+
+            tx.commit();
+        } catch (Exception e) {
+            tx.rollback();
+        } finally {
+            em.close();
+        }
+        emf.close();
+    }
+
+    public static void test3() {
+        EntityManagerFactory emf = Persistence.createEntityManagerFactory("hello");
+        EntityManager em = emf.createEntityManager();
+        EntityTransaction tx = em.getTransaction();
+        tx.begin();
+        try {
+            Member3 member1 = Member3.builder()
+                    .name("member1")
+                    .build();
+            em.persist(member1);
+
+            Member3 member2 = Member3.builder()
+                    .name("member2")
+                    .build();
+            em.persist(member2);
+
+            em.flush();
+            em.clear();
+
+            Member3 m1 = em.find(Member3.class, member1.getId());
+            Member3 m2 = em.getReference(Member3.class, member2.getId());
+
+            System.out.println("m1 == m2: " + (m1.getClass() == m2.getClass()));
+            System.out.println("m1 == m2: " + (m1 instanceof Member3));
+            System.out.println("m1 == m2: " + (m2 instanceof Member3));
 
             tx.commit();
         } catch (Exception e) {

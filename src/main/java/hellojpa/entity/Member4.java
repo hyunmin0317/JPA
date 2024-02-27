@@ -6,8 +6,6 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDateTime;
-
 @Entity(name = "MBR4")
 @Getter
 @Builder
@@ -23,13 +21,9 @@ public class Member4 {
     @Column(name = "USERNAME")
     private String name;
 
-    private LocalDateTime startDate;
+    @Embedded
+    private Period workPeriod;
 
-    private LocalDateTime endDate;
-
-    private String city;
-
-    private String street;
-
-    private String zipcode;
+    @Embedded
+    private Address homeAddress;
 }

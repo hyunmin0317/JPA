@@ -9,6 +9,9 @@ import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.EntityTransaction;
 import jakarta.persistence.Persistence;
 
+import java.util.List;
+import java.util.Set;
+
 public class JpaMain09 {
 
     public static void main(String[] args) {
@@ -113,6 +116,21 @@ public class JpaMain09 {
             member.getAddressHistory().add(new Address("old2", "street", "10000"));
 
             em.persist(member);
+
+            em.flush();
+            em.clear();
+
+            // 임베디드 타입 -> 즉시 로딩 (EAGER)
+            System.out.println("============= START =============");
+            Member5 findMember = em.find(Member5.class, member.getId());
+
+            // 값 타입 컬렉션 -> 지연 로딩 (LAZY)
+            List<Address> addressHistory = findMember.getAddressHistory();
+            addressHistory.forEach(h -> System.out.println("address = " + h.getCity()));
+
+            Set<String> favoriteFoods = findMember.getFavoriteFoods();
+            favoriteFoods.forEach(f -> System.out.println("favoriteFood = " + f));
+
             tx.commit();
         } catch (Exception e) {
             tx.rollback();

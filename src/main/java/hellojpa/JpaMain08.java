@@ -22,6 +22,7 @@ public class JpaMain08 {
         test5();
         test6();
         test7();
+        test8();
     }
 
     public static void test1() {
@@ -248,6 +249,43 @@ public class JpaMain08 {
 //            em.persist(parent);
 //            em.persist(child1);
 //            em.persist(child2);
+
+            em.flush();
+            em.clear();
+
+            // orphanRemoval = true 설정 -> 리스트 remove 시 DELETE query
+            Parent findParent = em.find(Parent.class, parent.getId());
+            findParent.getChildren().remove(0);
+
+            tx.commit();
+        } catch (Exception e) {
+            tx.rollback();
+        } finally {
+            em.close();
+        }
+        emf.close();
+    }
+
+    public static void test8() {
+        EntityManagerFactory emf = Persistence.createEntityManagerFactory("hello");
+        EntityManager em = emf.createEntityManager();
+        EntityTransaction tx = em.getTransaction();
+        tx.begin();
+        try {
+            Child child1 = new Child();
+            Child child2 = new Child();
+
+            Parent parent = new Parent();
+            parent.addChild(child1);
+            parent.addChild(child2);
+
+            em.persist(parent);
+
+            em.flush();
+            em.clear();
+
+            Parent findParent = em.find(Parent.class, parent.getId());
+            em.remove(findParent);
 
             tx.commit();
         } catch (Exception e) {

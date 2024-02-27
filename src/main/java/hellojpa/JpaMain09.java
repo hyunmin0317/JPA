@@ -1,9 +1,6 @@
 package hellojpa;
 
-import hellojpa.entity.Address;
-import hellojpa.entity.Member4;
-import hellojpa.entity.Member5;
-import hellojpa.entity.Period;
+import hellojpa.entity.*;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.EntityTransaction;
@@ -112,8 +109,8 @@ public class JpaMain09 {
             member.getFavoriteFoods().add("치킨");
             member.getFavoriteFoods().add("족발");
             member.getFavoriteFoods().add("피자");
-            member.getAddressHistory().add(new Address("old1", "street", "10000"));
-            member.getAddressHistory().add(new Address("old2", "street", "10000"));
+            member.getAddressHistory().add(AddressEntity.builder().address(new Address("old1", "street", "10000")).build());
+            member.getAddressHistory().add(AddressEntity.builder().address(new Address("old2", "street", "10000")).build());
 
             em.persist(member);
 
@@ -133,12 +130,12 @@ public class JpaMain09 {
             findMember.getFavoriteFoods().remove("치킨");
             findMember.getFavoriteFoods().add("한식");
 
-            findMember.getAddressHistory().remove(new Address("old1", "street", "10000"));
-            findMember.getAddressHistory().add(new Address("newCity1", "street", "10000"));
+            findMember.getAddressHistory().remove(AddressEntity.builder().address(new Address("old1", "street", "10000")).build());
+            findMember.getAddressHistory().add(AddressEntity.builder().address(new Address("newCity1", "street", "10000")).build());
 
             // 값 타입 컬렉션 -> 지연 로딩 (LAZY)
-            List<Address> addressHistory = findMember.getAddressHistory();
-            addressHistory.forEach(h -> System.out.println("address = " + h.getCity()));
+            List<AddressEntity> addressHistory = findMember.getAddressHistory();
+            addressHistory.forEach(h -> System.out.println("address = " + h.getAddress().getCity()));
 
             Set<String> favoriteFoods = findMember.getFavoriteFoods();
             favoriteFoods.forEach(f -> System.out.println("favoriteFood = " + f));
@@ -146,7 +143,6 @@ public class JpaMain09 {
             tx.commit();
         } catch (Exception e) {
             tx.rollback();
-            e.printStackTrace();
         } finally {
             em.close();
         }

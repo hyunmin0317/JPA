@@ -62,9 +62,10 @@ public class JpaMain08 {
             em.clear();
 
             Member3 findMember2 = em.getReference(Member3.class, 1L);
-            System.out.println("findMember = " + findMember2.getClass());   // findMember = class hellojpa.entity.Member3$HibernateProxy$vHTFZnBj
+            System.out.println("before findMember = " + findMember2.getClass());    // class hellojpa.entity.Member3$HibernateProxy
             System.out.println("findMember.id = " + findMember2.getId());
             System.out.println("findMember.name = " + findMember2.getName());
+            System.out.println("after findMember = " + findMember2.getClass());     // class hellojpa.entity.Member3$HibernateProxy
 
             tx.commit();
         } catch (Exception e) {

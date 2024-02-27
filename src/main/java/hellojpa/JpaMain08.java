@@ -16,6 +16,7 @@ public class JpaMain08 {
         test3();
         test4();
         test5();
+        test6();
     }
 
     public static void test1() {
@@ -174,6 +175,42 @@ public class JpaMain08 {
         } catch (Exception e) {
             tx.rollback();
             e.printStackTrace();
+        } finally {
+            em.close();
+        }
+        emf.close();
+    }
+
+    public static void test6() {
+        EntityManagerFactory emf = Persistence.createEntityManagerFactory("hello");
+        EntityManager em = emf.createEntityManager();
+        EntityTransaction tx = em.getTransaction();
+        tx.begin();
+        try {
+            Team team = Team.builder()
+                    .name("TeamA")
+                    .build();
+            em.persist(team);
+
+            Member3 member = Member3.builder()
+                    .name("member1")
+                    .team(team)
+                    .build();
+            em.persist(member);
+
+            em.flush();
+            em.clear();
+
+            Member3 m = em.find(Member3.class, 1L);
+            System.out.println("m = " + m.getTeam().getClass());
+
+            System.out.println("============");
+            m.getTeam().getName();
+            System.out.println("============");
+
+            tx.commit();
+        } catch (Exception e) {
+            tx.rollback();
         } finally {
             em.close();
         }

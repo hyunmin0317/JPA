@@ -6,9 +6,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-@Entity
-@Setter
+@Entity(name = "M")
 @Getter
+@Setter
 @NoArgsConstructor
 @DiscriminatorValue("M")
 public class Movie extends Item {

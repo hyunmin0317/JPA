@@ -6,6 +6,7 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.EntityTransaction;
 import jakarta.persistence.Persistence;
+import org.hibernate.Hibernate;
 
 public class JpaMain08 {
 
@@ -160,6 +161,7 @@ public class JpaMain08 {
             System.out.println("refMember = " + refMember.getClass());      // Proxy
             System.out.println("isLoaded = " + emf.getPersistenceUnitUtil().isLoaded(refMember));
             refMember.getName();
+            Hibernate.initialize(refMember);    // 강제초기화
             System.out.println("isLoaded = " + emf.getPersistenceUnitUtil().isLoaded(refMember));
 
 // org.hibernate.LazyInitializationException

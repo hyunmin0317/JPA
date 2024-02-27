@@ -124,6 +124,15 @@ public class JpaMain09 {
             System.out.println("============= START =============");
             Member5 findMember = em.find(Member5.class, member.getId());
 
+            // homeCity -> newCity
+//            findMember.getHomeAddress().setCity("newCity");     // -> X
+            Address a = findMember.getHomeAddress();
+            findMember.setHomeAddress(new Address("newCity", a.getStreet(), a.getZipcode()));
+
+            // 치킨 -> 한식
+            findMember.getFavoriteFoods().remove("치킨");
+            findMember.getFavoriteFoods().add("한식");
+
             // 값 타입 컬렉션 -> 지연 로딩 (LAZY)
             List<Address> addressHistory = findMember.getAddressHistory();
             addressHistory.forEach(h -> System.out.println("address = " + h.getCity()));

@@ -13,6 +13,7 @@ public class JpaMain09 {
     public static void main(String[] args) {
         test1();
         test2();
+        test3();
     }
 
     public static void test1() {
@@ -80,5 +81,16 @@ public class JpaMain09 {
             em.close();
         }
         emf.close();
+    }
+
+    public static void test3() {
+        int a = 10;
+        int b = 10;
+        System.out.println("a == b: " + (a == b));      // true
+
+        Address address1 = new Address("city", "street", "10000");
+        Address address2 = new Address("city", "street", "10000");
+        System.out.println("address1 == address2: " + (address1 == address2));      // false
+        System.out.println("address1 == address2: " + address1.equals(address2));   // true
     }
 }

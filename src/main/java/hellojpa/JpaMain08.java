@@ -14,6 +14,7 @@ public class JpaMain08 {
         test2();
         test3();
         test4();
+        test5();
     }
 
     public static void test1() {
@@ -135,6 +136,38 @@ public class JpaMain08 {
             tx.commit();
         } catch (Exception e) {
             tx.rollback();
+        } finally {
+            em.close();
+        }
+        emf.close();
+    }
+
+    public static void test5() {
+        EntityManagerFactory emf = Persistence.createEntityManagerFactory("hello");
+        EntityManager em = emf.createEntityManager();
+        EntityTransaction tx = em.getTransaction();
+        tx.begin();
+        try {
+            Member3 member1 = Member3.builder()
+                    .name("member1")
+                    .build();
+            em.persist(member1);
+
+            em.flush();
+            em.clear();
+
+            Member3 refMember = em.getReference(Member3.class, member1.getId());
+            System.out.println("refMember = " + refMember.getClass());      // Proxy
+
+            em.detach(refMember);
+            em.clear();
+            em.close();
+
+            refMember.getName();        // org.hibernate.LazyInitializationException
+            tx.commit();
+        } catch (Exception e) {
+            tx.rollback();
+            e.printStackTrace();
         } finally {
             em.close();
         }

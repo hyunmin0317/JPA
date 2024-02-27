@@ -8,6 +8,8 @@ import jakarta.persistence.EntityTransaction;
 import jakarta.persistence.Persistence;
 import org.hibernate.Hibernate;
 
+import java.util.List;
+
 public class JpaMain08 {
 
     public static void main(String[] args) {
@@ -207,6 +209,12 @@ public class JpaMain08 {
             System.out.println("============");
             m.getTeam().getName();
             System.out.println("============");
+
+            // 즉시 로딩(EAGER) -> JPQL 에서 N+1 문제
+            // 가급적 지연 로딩(LAZY) 만 사용
+            List<Member3> members = em.createQuery("select m from MBR3 m", Member3.class)
+                    .getResultList();
+            members.forEach(mem -> System.out.println("mem = " + mem.getName()));
 
             tx.commit();
         } catch (Exception e) {

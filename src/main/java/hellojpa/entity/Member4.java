@@ -1,13 +1,11 @@
 package hellojpa.entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @Entity(name = "MBR4")
 @Getter
+@Setter
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor

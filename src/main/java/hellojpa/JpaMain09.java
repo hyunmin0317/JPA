@@ -2,6 +2,7 @@ package hellojpa;
 
 import hellojpa.entity.Address;
 import hellojpa.entity.Member4;
+import hellojpa.entity.Member5;
 import hellojpa.entity.Period;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
@@ -14,6 +15,7 @@ public class JpaMain09 {
         test1();
         test2();
         test3();
+        test4();
     }
 
     public static void test1() {
@@ -92,5 +94,32 @@ public class JpaMain09 {
         Address address2 = new Address("city", "street", "10000");
         System.out.println("address1 == address2: " + (address1 == address2));      // false
         System.out.println("address1 == address2: " + address1.equals(address2));   // true
+    }
+
+    public static void test4() {
+        EntityManagerFactory emf = Persistence.createEntityManagerFactory("hello");
+        EntityManager em = emf.createEntityManager();
+        EntityTransaction tx = em.getTransaction();
+        tx.begin();
+        try {
+            Member5 member = new Member5();
+            member.setName("member1");
+            member.setHomeAddress(new Address("homeCity", "street", "10000"));
+
+            member.getFavoriteFoods().add("치킨");
+            member.getFavoriteFoods().add("족발");
+            member.getFavoriteFoods().add("피자");
+            member.getAddressHistory().add(new Address("old1", "street", "10000"));
+            member.getAddressHistory().add(new Address("old2", "street", "10000"));
+
+            em.persist(member);
+            tx.commit();
+        } catch (Exception e) {
+            tx.rollback();
+            e.printStackTrace();
+        } finally {
+            em.close();
+        }
+        emf.close();
     }
 }

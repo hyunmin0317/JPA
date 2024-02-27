@@ -1,5 +1,6 @@
 package jpabook.jpashop.domain;
 
+import hellojpa.entity.BaseEntity;
 import jakarta.persistence.*;
 import lombok.Getter;
 
@@ -10,7 +11,7 @@ import java.util.List;
 @Entity
 @Getter
 @Table(name = "ORDERS")
-public class Order {
+public class Order extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

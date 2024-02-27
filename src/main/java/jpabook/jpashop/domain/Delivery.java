@@ -1,9 +1,10 @@
 package jpabook.jpashop.domain;
 
+import hellojpa.entity.BaseEntity;
 import jakarta.persistence.*;
 
 @Entity
-public class Delivery {
+public class Delivery extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

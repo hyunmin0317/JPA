@@ -1,14 +1,15 @@
-package jpabook.jpashop;
+package hellojpa;
 
+import hellojpa.entity.Member3;
+import hellojpa.entity.Movie;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.EntityTransaction;
 import jakarta.persistence.Persistence;
-import jpabook.jpashop.domain.Book;
-import jpabook.jpashop.domain.Order;
-import jpabook.jpashop.domain.OrderItem;
 
-public class JpaMain {
+import java.time.LocalDateTime;
+
+public class JpaMain07 {
 
     public static void main(String[] args) {
         test1();
@@ -21,8 +22,20 @@ public class JpaMain {
         EntityTransaction tx = em.getTransaction();
         tx.begin();
         try {
-            Order order = new Order();
-            order.addOrderItem(new OrderItem());
+            Movie movie = new Movie();
+            movie.setDirector("aaa");
+            movie.setActor("bbbb");
+            movie.setName("바람과함께사라지다");
+            movie.setPrice(10000);
+
+            em.persist(movie);
+
+            em.flush();
+            em.clear();
+
+            Movie findMovie = em.find(Movie.class, movie.getId());
+            System.out.println("findMovie = " + findMovie);
+
             tx.commit();
         } catch (Exception e) {
             tx.rollback();
@@ -38,10 +51,13 @@ public class JpaMain {
         EntityTransaction tx = em.getTransaction();
         tx.begin();
         try {
-            Book book = new Book();
-            book.setName("JPA");
-            book.setAuthor("김영한");
-            em.persist(book);
+            Member3 member = Member3.builder()
+                    .name("user1")
+                    .build();
+            member.setCreatedBy("kim");
+            member.setCreatedDate(LocalDateTime.now());
+
+            em.persist(member);
             tx.commit();
         } catch (Exception e) {
             tx.rollback();

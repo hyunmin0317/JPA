@@ -1,5 +1,6 @@
 package jpabook.jpashop.domain;
 
+import hellojpa.entity.BaseEntity;
 import jakarta.persistence.*;
 import lombok.Getter;
 
@@ -8,7 +9,7 @@ import java.util.List;
 
 @Entity
 @Getter
-public class Member {
+public class Member extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

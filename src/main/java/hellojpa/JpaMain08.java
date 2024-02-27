@@ -13,6 +13,7 @@ public class JpaMain08 {
         test1();
         test2();
         test3();
+        test4();
     }
 
     public static void test1() {
@@ -103,6 +104,34 @@ public class JpaMain08 {
             System.out.println("m1 == m2: " + (m1 instanceof Member3));
             System.out.println("m1 == m2: " + (m2 instanceof Member3));
 
+            tx.commit();
+        } catch (Exception e) {
+            tx.rollback();
+        } finally {
+            em.close();
+        }
+        emf.close();
+    }
+
+    public static void test4() {
+        EntityManagerFactory emf = Persistence.createEntityManagerFactory("hello");
+        EntityManager em = emf.createEntityManager();
+        EntityTransaction tx = em.getTransaction();
+        tx.begin();
+        try {
+            Member3 member1 = Member3.builder()
+                    .name("member1")
+                    .build();
+            em.persist(member1);
+
+            em.flush();
+            em.clear();
+
+            Member3 member = em.find(Member3.class, member1.getId());
+            Member3 reference = em.getReference(Member3.class, member1.getId());
+            System.out.println("member = " + member.getClass());
+            System.out.println("reference = " + reference.getClass());
+            System.out.println("a == a: " + (member == reference));
             tx.commit();
         } catch (Exception e) {
             tx.rollback();

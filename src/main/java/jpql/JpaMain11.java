@@ -14,7 +14,8 @@ public class JpaMain11 {
 
     public static void main(String[] args) {
 //        test1();
-        test2();
+//        test2();
+        test3();
     }
 
     public static void test1() {
@@ -125,6 +126,66 @@ public class JpaMain11 {
             String query4 = "select distinct t from JPQL_TEAM t join fetch t.members";
             List<Team> result4 = em.createQuery(query4, Team.class).getResultList();
             result4.forEach(team -> {
+                System.out.println("team = " + team.getName() + " | memebers = " + team.getMembers().size());
+                team.getMembers().forEach(member -> System.out.println("-> member = " + member));
+            });
+
+            tx.commit();
+        } catch (Exception e) {
+            tx.rollback();
+            e.printStackTrace();
+        } finally {
+            em.close();
+        }
+        emf.close();
+    }
+
+    public static void test3() {
+        EntityManagerFactory emf = Persistence.createEntityManagerFactory("hello");
+        EntityManager em = emf.createEntityManager();
+        EntityTransaction tx = em.getTransaction();
+        tx.begin();
+        try {
+            Team teamA = new Team();
+            teamA.setName("팀A");
+            em.persist(teamA);
+
+            Team teamB = new Team();
+            teamB.setName("팀B");
+            em.persist(teamB);
+
+            Member member1 = new Member();
+            member1.setUsername("회원1");
+            member1.setTeam(teamA);
+            em.persist(member1);
+
+            Member member2 = new Member();
+            member2.setUsername("회원2");
+            member2.setTeam(teamA);
+            em.persist(member2);
+
+            Member member3 = new Member();
+            member3.setUsername("회원2");
+            member3.setTeam(teamB);
+            em.persist(member3);
+
+            em.flush();
+            em.clear();
+
+            // 페치 조인에서 페이지네이션 -> 메모리에서 페이징 (매우 위험)
+            String query1 = "select t from JPQL_TEAM t join fetch t.members";
+            List<Team> result1 = em.createQuery(query1, Team.class)
+                    .setFirstResult(0)
+                    .setMaxResults(1)
+                    .getResultList();
+            result1.forEach(team -> System.out.println("team = " + team.getName() + " | memebers = " + team.getMembers().size()));
+
+            String query2 = "select t from JPQL_TEAM t";
+            List<Team> result2 = em.createQuery(query2, Team.class)
+                    .setFirstResult(0)
+                    .setMaxResults(2)
+                    .getResultList();
+            result2.forEach(team -> {
                 System.out.println("team = " + team.getName() + " | memebers = " + team.getMembers().size());
                 team.getMembers().forEach(member -> System.out.println("-> member = " + member));
             });

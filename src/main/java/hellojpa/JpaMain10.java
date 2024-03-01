@@ -20,6 +20,7 @@ public class JpaMain10 {
         test1();
         test2();
         test3();
+        test4();
     }
 
     // JPQL
@@ -88,6 +89,25 @@ public class JpaMain10 {
                     .orderBy(member5.id.desc())
                     .fetch();
             result.forEach(System.out::println);
+
+            tx.commit();
+        } catch (Exception e) {
+            tx.rollback();
+        } finally {
+            em.close();
+        }
+        emf.close();
+    }
+
+    // 네이티브 SQL
+    public static void test4() {
+        EntityManagerFactory emf = Persistence.createEntityManagerFactory("hello");
+        EntityManager em = emf.createEntityManager();
+        EntityTransaction tx = em.getTransaction();
+        tx.begin();
+        try {
+            List<Member5> members = em.createNativeQuery("SELECT * FROM MBR5").getResultList();
+            members.forEach(System.out::println);
 
             tx.commit();
         } catch (Exception e) {

@@ -7,12 +7,14 @@ import jpql.entity.Member;
 import jpql.entity.Team;
 
 import java.util.List;
+import java.util.stream.IntStream;
 
 public class JpaMain10 {
 
     public static void main(String[] args) {
         test1();
         test2();
+        test3();
     }
 
     public static void test1() {
@@ -89,6 +91,40 @@ public class JpaMain10 {
                 System.out.println("memberDto.username = " + dto.username());
                 System.out.println("memberDto.age = " + dto.age());
             });
+
+            tx.commit();
+        } catch (Exception e) {
+            tx.rollback();
+            e.printStackTrace();
+        } finally {
+            em.close();
+        }
+        emf.close();
+    }
+
+    public static void test3() {
+        EntityManagerFactory emf = Persistence.createEntityManagerFactory("hello");
+        EntityManager em = emf.createEntityManager();
+        EntityTransaction tx = em.getTransaction();
+        tx.begin();
+        try {
+            IntStream.range(0, 100).forEach(i -> {
+                Member member = new Member();
+                member.setUsername("member" + i);
+                member.setAge(i);
+                em.persist(member);
+            });
+
+            em.flush();
+            em.clear();
+
+            List<Member> result = em.createQuery("select m from JPQL_MEMBER m order by m.age desc", Member.class)
+                    .setFirstResult(1)
+                    .setMaxResults(10)
+                    .getResultList();
+
+            System.out.println("result.size = " + result.size());
+            result.forEach(System.out::println);
 
             tx.commit();
         } catch (Exception e) {

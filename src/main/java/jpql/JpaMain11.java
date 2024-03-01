@@ -13,9 +13,10 @@ import java.util.List;
 public class JpaMain11 {
 
     public static void main(String[] args) {
-//        test1();
-//        test2();
+        test1();
+        test2();
         test3();
+        test4();
     }
 
     public static void test1() {
@@ -189,6 +190,66 @@ public class JpaMain11 {
                 System.out.println("team = " + team.getName() + " | memebers = " + team.getMembers().size());
                 team.getMembers().forEach(member -> System.out.println("-> member = " + member));
             });
+
+            tx.commit();
+        } catch (Exception e) {
+            tx.rollback();
+            e.printStackTrace();
+        } finally {
+            em.close();
+        }
+        emf.close();
+    }
+
+    public static void test4() {
+        EntityManagerFactory emf = Persistence.createEntityManagerFactory("hello");
+        EntityManager em = emf.createEntityManager();
+        EntityTransaction tx = em.getTransaction();
+        tx.begin();
+        try {
+            Team teamA = new Team();
+            teamA.setName("팀A");
+            em.persist(teamA);
+
+            Team teamB = new Team();
+            teamB.setName("팀B");
+            em.persist(teamB);
+
+            Member member1 = new Member();
+            member1.setUsername("회원1");
+            member1.setTeam(teamA);
+            em.persist(member1);
+
+            Member member2 = new Member();
+            member2.setUsername("회원2");
+            member2.setTeam(teamA);
+            em.persist(member2);
+
+            Member member3 = new Member();
+            member3.setUsername("회원2");
+            member3.setTeam(teamB);
+            em.persist(member3);
+
+            em.flush();
+            em.clear();
+
+            String query1 = "select m from JPQL_MEMBER m where m = :member";
+            List<Member> result1 = em.createQuery(query1, Member.class)
+                    .setParameter("member", member1)
+                    .getResultList();
+            System.out.println(result1);
+
+            String query2 = "select m from JPQL_MEMBER m where m.id = :memberId";
+            List<Member> result2 = em.createQuery(query2, Member.class)
+                    .setParameter("memberId", member1.getId())
+                    .getResultList();
+            System.out.println(result2);
+
+            String query3 = "select m from JPQL_MEMBER m where m.team = :team";
+            List<Member> result3 = em.createQuery(query3, Member.class)
+                    .setParameter("team", teamA)
+                    .getResultList();
+            System.out.println(result3);
 
             tx.commit();
         } catch (Exception e) {

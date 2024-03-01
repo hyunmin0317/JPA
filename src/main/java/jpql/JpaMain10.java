@@ -18,6 +18,7 @@ public class JpaMain10 {
         test3();
         test4();
         test5();
+        test6();
     }
 
     public static void test1() {
@@ -222,6 +223,54 @@ public class JpaMain10 {
                     .getResultList();
             resultList2.forEach(o -> System.out.println("objects = " + o));
 
+            tx.commit();
+        } catch (Exception e) {
+            tx.rollback();
+            e.printStackTrace();
+        } finally {
+            em.close();
+        }
+        emf.close();
+    }
+
+    public static void test6() {
+        EntityManagerFactory emf = Persistence.createEntityManagerFactory("hello");
+        EntityManager em = emf.createEntityManager();
+        EntityTransaction tx = em.getTransaction();
+        tx.begin();
+        try {
+            Team team = new Team();
+            team.setName("teamA");
+            em.persist(team);
+
+            Member member = new Member();
+            member.setUsername("teamA");
+            member.setAge(10);
+            member.setType(MemberType.ADMIN);
+            member.changeTeam(team);
+            em.persist(member);
+
+            em.flush();
+            em.clear();
+
+            String query = "select " +
+                    "case when m.age <= 10 then '학생요금' " +
+                    "     when m.age >= 60 then '경로요금' " +
+                    "     else '일반요금' " +
+                    "end " +
+                    "from JPQL_MEMBER m";
+            List<String> result = em.createQuery(query, String.class).getResultList();
+            result.forEach(System.out::println);
+
+            String query2 = "select coalesce(m.username, '이름 없는 회원') from JPQL_MEMBER m";
+            List<String> result2 = em.createQuery(query2, String.class).getResultList();
+            result2.forEach(System.out::println);
+
+            String query3 = "select nullif(m.username, 'teamA') from JPQL_MEMBER m";
+            List<String> result3 = em.createQuery(query3, String.class).getResultList();
+            result3.forEach(System.out::println);
+
+            tx.commit();
         } catch (Exception e) {
             tx.rollback();
             e.printStackTrace();

@@ -1,7 +1,7 @@
 package hellojpa;
 
 import com.querydsl.jpa.impl.JPAQueryFactory;
-import hellojpa.entity.Member5;
+import hellojpa.entity.Member;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.EntityTransaction;
@@ -12,7 +12,7 @@ import jakarta.persistence.criteria.Root;
 
 import java.util.List;
 
-import static hellojpa.entity.QMember5.member5;
+import static hellojpa.entity.QMember.member;
 
 public class JpaMain10 {
 
@@ -30,9 +30,9 @@ public class JpaMain10 {
         EntityTransaction tx = em.getTransaction();
         tx.begin();
         try {
-            List<Member5> result = em.createQuery(
-                    "select m From MBR5 m where m.name like '%kim%'",
-                    Member5.class
+            List<Member> result = em.createQuery(
+                    "select m From MBR m where m.name like '%kim%'",
+                    Member.class
             ).getResultList();
             result.forEach(System.out::println);
             tx.commit();
@@ -52,17 +52,17 @@ public class JpaMain10 {
         tx.begin();
         try {
             CriteriaBuilder cb = em.getCriteriaBuilder();
-            CriteriaQuery<Member5> query = cb.createQuery(Member5.class);
+            CriteriaQuery<Member> query = cb.createQuery(Member.class);
 
-            Root<Member5> m = query.from(Member5.class);
+            Root<Member> m = query.from(Member.class);
 
-            CriteriaQuery<Member5> cq = query.select(m);
+            CriteriaQuery<Member> cq = query.select(m);
 
             String name = "choi";
             if (name != null)
                 cq = cq.where(cb.equal(m.get("name"), "kim"));
 
-            List<Member5> result = em.createQuery(cq).getResultList();
+            List<Member> result = em.createQuery(cq).getResultList();
             result.forEach(System.out::println);
 
             tx.commit();
@@ -82,11 +82,11 @@ public class JpaMain10 {
         EntityTransaction tx = em.getTransaction();
         tx.begin();
         try {
-            List<Member5> result = queryFactory
-                    .select(member5)
-                    .from(member5)
-                    .where(member5.name.like("kim"))
-                    .orderBy(member5.id.desc())
+            List<Member> result = queryFactory
+                    .select(member)
+                    .from(member)
+                    .where(member.name.like("kim"))
+                    .orderBy(member.id.desc())
                     .fetch();
             result.forEach(System.out::println);
 
@@ -106,7 +106,11 @@ public class JpaMain10 {
         EntityTransaction tx = em.getTransaction();
         tx.begin();
         try {
-            List<Member5> members = em.createNativeQuery("SELECT * FROM MBR5").getResultList();
+            Member member = new Member(1L, "member1");
+            em.persist(member);
+
+            // flush -> commit, query
+            List<Member> members = em.createNativeQuery("SELECT * FROM MBR", Member.class).getResultList();
             members.forEach(System.out::println);
 
             tx.commit();

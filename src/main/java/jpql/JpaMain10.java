@@ -15,6 +15,7 @@ public class JpaMain10 {
         test1();
         test2();
         test3();
+        test4();
     }
 
     public static void test1() {
@@ -125,6 +126,55 @@ public class JpaMain10 {
 
             System.out.println("result.size = " + result.size());
             result.forEach(System.out::println);
+
+            tx.commit();
+        } catch (Exception e) {
+            tx.rollback();
+            e.printStackTrace();
+        } finally {
+            em.close();
+        }
+        emf.close();
+    }
+
+    public static void test4() {
+        EntityManagerFactory emf = Persistence.createEntityManagerFactory("hello");
+        EntityManager em = emf.createEntityManager();
+        EntityTransaction tx = em.getTransaction();
+        tx.begin();
+        try {
+            Team team = new Team();
+            team.setName("teamA");
+            em.persist(team);
+
+            Member member = new Member();
+            member.setUsername("member1");
+            member.setAge(10);
+            member.changeTeam(team);
+            em.persist(member);
+
+            em.flush();
+            em.clear();
+
+            // 내부 조인: [inner] join
+            String query = "select m from JPQL_MEMBER m join m.team t";
+            em.createQuery(query, Member.class).getResultList();
+
+            // 외부 조인: left [outer] join
+            String query2 = "select m from JPQL_MEMBER m left join m.team t";
+            em.createQuery(query2, Member.class).getResultList();
+
+            // 세타 조인
+            String query3 = "select m from JPQL_MEMBER m, JPQL_TEAM t where m.username = team.name";
+            em.createQuery(query3, Member.class).getResultList();
+
+            // 1. 조인 대상 필터링
+            String query4 = "select m from JPQL_MEMBER m left join m.team t on t.name = 'A'";
+            em.createQuery(query4, Member.class).getResultList();
+
+            // 2. 연관관계 없는 엔티티 외부 조인
+            String query5 = "select m from JPQL_MEMBER m left join JPQL_TEAM t on m.username = t.name";
+            em.createQuery(query5, Member.class).getResultList();
 
             tx.commit();
         } catch (Exception e) {

@@ -17,7 +17,8 @@ public class JpaMain11 {
 //        test2();
 //        test3();
 //        test4();
-        test5();
+//        test5();
+        test6();
     }
 
     public static void test1() {
@@ -93,7 +94,7 @@ public class JpaMain11 {
             em.persist(member2);
 
             Member member3 = new Member();
-            member3.setUsername("회원2");
+            member3.setUsername("회원3");
             member3.setTeam(teamB);
             em.persist(member3);
 
@@ -167,7 +168,7 @@ public class JpaMain11 {
             em.persist(member2);
 
             Member member3 = new Member();
-            member3.setUsername("회원2");
+            member3.setUsername("회원3");
             member3.setTeam(teamB);
             em.persist(member3);
 
@@ -227,7 +228,7 @@ public class JpaMain11 {
             em.persist(member2);
 
             Member member3 = new Member();
-            member3.setUsername("회원2");
+            member3.setUsername("회원3");
             member3.setTeam(teamB);
             em.persist(member3);
 
@@ -287,7 +288,7 @@ public class JpaMain11 {
             em.persist(member2);
 
             Member member3 = new Member();
-            member3.setUsername("회원2");
+            member3.setUsername("회원3");
             member3.setTeam(teamB);
             em.persist(member3);
 
@@ -298,6 +299,58 @@ public class JpaMain11 {
                     .setParameter("username", "회원1")
                     .getResultList();
             System.out.println(result1);
+
+            tx.commit();
+        } catch (Exception e) {
+            tx.rollback();
+            e.printStackTrace();
+        } finally {
+            em.close();
+        }
+        emf.close();
+    }
+
+    public static void test6() {
+        EntityManagerFactory emf = Persistence.createEntityManagerFactory("hello");
+        EntityManager em = emf.createEntityManager();
+        EntityTransaction tx = em.getTransaction();
+        tx.begin();
+        try {
+            Team teamA = new Team();
+            teamA.setName("팀A");
+            em.persist(teamA);
+
+            Team teamB = new Team();
+            teamB.setName("팀B");
+            em.persist(teamB);
+
+            Member member1 = new Member();
+            member1.setUsername("회원1");
+            member1.setTeam(teamA);
+            em.persist(member1);
+
+            Member member2 = new Member();
+            member2.setUsername("회원2");
+            member2.setTeam(teamA);
+            em.persist(member2);
+
+            Member member3 = new Member();
+            member3.setUsername("회원3");
+            member3.setTeam(teamB);
+            em.persist(member3);
+
+            // flush 자동 호출 -> commit, query, flush
+            int resultCount = em.createQuery("update JPQL_MEMBER m set m.age = 20").executeUpdate();
+            System.out.println("resultCount = " + resultCount);
+
+            Member findMember = em.find(Member.class, member1.getId());
+            // member.getAge() = 0 (20 X)
+            System.out.println("member.getAge() = " + findMember.getAge());
+
+            em.clear();     // 영속성 컨텍스트 초기화 필요
+            Member findMember2 = em.find(Member.class, member1.getId());
+            // member.getAge() = 20
+            System.out.println("member.getAge() = " + findMember2.getAge());
 
             tx.commit();
         } catch (Exception e) {

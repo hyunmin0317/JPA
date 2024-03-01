@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import jpql.dto.MemberDto;
 import jpql.entity.Address;
 import jpql.entity.Member;
+import jpql.entity.MemberType;
 import jpql.entity.Team;
 
 import java.util.List;
@@ -16,6 +17,7 @@ public class JpaMain10 {
         test2();
         test3();
         test4();
+        test5();
     }
 
     public static void test1() {
@@ -177,6 +179,49 @@ public class JpaMain10 {
             em.createQuery(query5, Member.class).getResultList();
 
             tx.commit();
+        } catch (Exception e) {
+            tx.rollback();
+            e.printStackTrace();
+        } finally {
+            em.close();
+        }
+        emf.close();
+    }
+
+    public static void test5() {
+        EntityManagerFactory emf = Persistence.createEntityManagerFactory("hello");
+        EntityManager em = emf.createEntityManager();
+        EntityTransaction tx = em.getTransaction();
+        tx.begin();
+        try {
+            Team team = new Team();
+            team.setName("teamA");
+            em.persist(team);
+
+            Member member = new Member();
+            member.setUsername("member1");
+            member.setAge(10);
+            member.setType(MemberType.ADMIN);
+            member.changeTeam(team);
+            em.persist(member);
+
+            em.flush();
+            em.clear();
+
+            String query = "select m.username, 'Hello', true from JPQL_MEMBER m";
+            List<Object[]> resultList = em.createQuery(query).getResultList();
+            resultList.forEach(o -> {
+                System.out.println("objects = " + o[0]);
+                System.out.println("objects = " + o[1]);
+                System.out.println("objects = " + o[2]);
+            });
+
+            String query2 = "select m.username from JPQL_MEMBER m where m.type = :userType";
+            List<String> resultList2 = em.createQuery(query2)
+                    .setParameter("userType", jpql.entity.MemberType.ADMIN)
+                    .getResultList();
+            resultList2.forEach(o -> System.out.println("objects = " + o));
+
         } catch (Exception e) {
             tx.rollback();
             e.printStackTrace();

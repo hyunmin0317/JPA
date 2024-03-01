@@ -1,5 +1,6 @@
 package hellojpa;
 
+import com.querydsl.jpa.impl.JPAQueryFactory;
 import hellojpa.entity.Member5;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
@@ -11,11 +12,14 @@ import jakarta.persistence.criteria.Root;
 
 import java.util.List;
 
+import static hellojpa.entity.QMember5.member5;
+
 public class JpaMain10 {
 
     public static void main(String[] args) {
         test1();
         test2();
+        test3();
     }
 
     // JPQL
@@ -58,6 +62,31 @@ public class JpaMain10 {
                 cq = cq.where(cb.equal(m.get("name"), "kim"));
 
             List<Member5> result = em.createQuery(cq).getResultList();
+            result.forEach(System.out::println);
+
+            tx.commit();
+        } catch (Exception e) {
+            tx.rollback();
+        } finally {
+            em.close();
+        }
+        emf.close();
+    }
+
+    // QueryDsl
+    public static void test3() {
+        EntityManagerFactory emf = Persistence.createEntityManagerFactory("hello");
+        EntityManager em = emf.createEntityManager();
+        JPAQueryFactory queryFactory = new JPAQueryFactory(em);
+        EntityTransaction tx = em.getTransaction();
+        tx.begin();
+        try {
+            List<Member5> result = queryFactory
+                    .select(member5)
+                    .from(member5)
+                    .where(member5.name.like("kim"))
+                    .orderBy(member5.id.desc())
+                    .fetch();
             result.forEach(System.out::println);
 
             tx.commit();
